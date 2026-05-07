@@ -1,0 +1,14 @@
+name = "nim_project"
+version = "0.1.0"
+defaultTargets = ["nim_project"]
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+
+[[lean_lib]]
+name = "NimProject"
+
+[[lean_exe]]
+name = "nim_project"
+root = "Nim"
