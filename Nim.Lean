@@ -17,6 +17,10 @@ structure Move (p : Position) where
 def NoMoves (p : Position) : Prop :=
   ∀ i : Fin p.length, p.get i = 0
 
+/- required to show that by_cases in `def response` is computable -/
+instance decNoMoves (p : Position) : Decidable (NoMoves p) :=
+  show Decidable (∀ i : Fin p.length, p.get i = 0) from inferInstance
+
 def apply (p : Position) (m : Move p) : Position :=
   p.set m.idx.val m.newVal
 
@@ -152,14 +156,14 @@ theorem totalStonesDecreases (p : Position) (m : Move p) :
 
 /- Implements the known winning strategy. -/
 mutual
-  noncomputable def strategy : (p : Position) → IsNPos p → Wins p
+  def strategy : (p : Position) → IsNPos p → Wins p
     | p, hN => by
       obtain ⟨m, hm⟩ := nposCanMoveToPpos p hN
       exact Wins.play p m (response (apply p m) hm)
     termination_by p _ => totalStones p
     decreasing_by exact totalStonesDecreases p m
 
-  noncomputable def response : (p : Position) → IsPPos p → Loses p
+  def response : (p : Position) → IsPPos p → Loses p
     | p, hP => by
       by_cases h : NoMoves p
       · exact Loses.noMove p h
